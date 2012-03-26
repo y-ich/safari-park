@@ -4,8 +4,7 @@
     var script;
     if ($('#backstage-script').length === 0) {
       script = document.createElement('script');
-      script.id = 'backstage-script';
-      script.src = 'lib/backstage.js';
+      script.src = 'lib/backstage.js?time=' + (new Date).valueOf();
       return document.body.appendChild(script);
     } else {
       return Backstage.toBackstage();

@@ -105,9 +105,9 @@ unless @Backstage?
   tab.className = 'tab clear'
   tab.innerHTML =
     '''
-    <li class="none"><a href="#script" class="blue">Script</a></li>
-    <li><a href="#html" class="red">HTML</a></li>
-    <li><a href="#css" class="green">CSS</a></li>
+    <li class="none"><a id="backstage-script" href="#script" class="blue">Script</a></li>
+    <li><a id="backstage-html" href="#html" class="red">HTML</a></li>
+    <li><a id="backstage-css" href="#css" class="green">CSS</a></li>
     '''
   back.appendChild tab
 
@@ -119,3 +119,15 @@ unless @Backstage?
 
   document.body.appendChild container
   document.body.appendChild document.createTextNode '\n'
+
+  document.getElementById('backstage-script').addEventListener 'click', (event) ->
+    event.preventDefault()
+    Backstage.toScript()
+
+  document.getElementById('backstage-html').addEventListener 'click', (event) ->
+    event.preventDefault()
+    Backstage.toHtml()
+
+  document.getElementById('backstage-css').addEventListener 'click', (event) ->
+    event.preventDefault()
+    Backstage.toCss()
