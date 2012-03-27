@@ -159,16 +159,25 @@ unless @Backstage?
 
   document.getElementById('backstage-script').addEventListener 'click', (event) ->
     event.preventDefault()
+    switchTab this
     Backstage.switch 'scriptEditor'
 
   document.getElementById('backstage-html').addEventListener 'click', (event) ->
     event.preventDefault()
+    switchTab this
     Backstage.switch 'htmlEditor'
 
   document.getElementById('backstage-css').addEventListener 'click', (event) ->
     event.preventDefault()
+    switchTab this
     Backstage.switch 'cssEditor'
 
   document.getElementById('frontstage').addEventListener 'click', (event) ->
     Backstage.toFrontstage()
 
+switchTab = (elem) ->
+  tabs = elem.parentElement.parentElement.children
+  for i in [0...tabs.length]
+    tabs[i].className = ''
+
+  elem.parentElement.className = 'none'
