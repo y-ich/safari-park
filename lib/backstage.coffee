@@ -21,10 +21,29 @@ get = (url, type, callback) ->
 
 unless @Backstage?
   @Backstage = 
-    editor : null
-    script : null
-    html : null
-    css : null
+    scriptEditor : ->
+      # @editor.setValue @script ? ''
+      # @editor.setOption 'mode', 'javascript'
+    htmlEditor : ->
+      @html = CodeMirror document.getElementById('backstage-editor-html'),
+        value : document.documentElement.innerHTML
+        mode : 'xml'
+        lineNumbers : true
+        lineWrapping : true
+
+    cssEditor : ->
+      @css = CodeMirror document.getElementById('backstage-editor-css'),
+        value : @css
+        mode : 'css'
+        lineNumbers : true
+        lineWrapping : true
+
+    switch : (editor) ->
+      @scriptEditor.getWrapperElement().style.display = 'none'
+      @htmlEditor.getWrapperElement().style.display = 'none'
+      @cssEditor.getWrapperElement().style.display = 'none'
+      this[editor].getWrapperElement().style.display = 'block'
+
     toBackstage : ->
       page = document.getElementById 'backstage-page'
       page.className = 'flipped'
@@ -32,20 +51,6 @@ unless @Backstage?
     toFrontstage : ->
       page = document.getElementById 'backstage-page'
       page.className = ''
-
-    toScript : ->
-      # @editor.setValue @script ? ''
-      # @editor.setOption 'mode', 'javascript'
-    toHtml : ->
-      @html = CodeMirror document.getElementById('backstage-editor-html'),
-      value : document.documentElement.innerHTML
-      mode : 'xml'
-      lineNumbers : true
-    toCss : ->
-      @css = CodeMirror document.getElementById('backstage-editor-css'),
-        value : @css
-        mode : 'css'
-        lineNumbers : true
 
 
   get window.location.href.replace(/\.html?$/, '.js'), 'text/html', (result) -> Backstage.script = result
@@ -64,10 +69,25 @@ unless @Backstage?
 
   cmscript = document.createElement 'script'
   cmscript.onload = ->
-    Backstage.script = CodeMirror document.getElementById('backstage-editor-script'),
+    Backstage.scriptEditor = CodeMirror document.getElementById('backstage-editor-script'),
       value : Backstage.script 
       mode : 'javascript'
       lineNumbers : true
+      lineWrapping : true
+
+    Backstage.htmlEditor = CodeMirror document.getElementById('backstage-editor-html'),
+      value : document.documentElement.innerHTML
+      mode : 'xml'
+      lineNumbers : true
+      lineWrapping : true
+
+    Backstage.cssEditor = CodeMirror document.getElementById('backstage-editor-css'),
+      value : Backstage.css
+      mode : 'css'
+      lineNumbers : true
+      lineWrapping : true
+
+    Backstage.switch 'scriptEditor'
 
     setTimeout Backstage.toBackstage, 100
 
@@ -139,16 +159,16 @@ unless @Backstage?
 
   document.getElementById('backstage-script').addEventListener 'click', (event) ->
     event.preventDefault()
-    Backstage.toScript()
+    Backstage.switch 'scriptEditor'
 
   document.getElementById('backstage-html').addEventListener 'click', (event) ->
     event.preventDefault()
-    Backstage.toHtml()
+    Backstage.switch 'htmlEditor'
 
   document.getElementById('backstage-css').addEventListener 'click', (event) ->
     event.preventDefault()
-    Backstage.toCss()
+    Backstage.switch 'cssEditor'
 
   document.getElementById('frontstage').addEventListener 'click', (event) ->
     Backstage.toFrontstage()
-    
+
