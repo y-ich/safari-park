@@ -23,6 +23,7 @@ unless @Backstage?
   @Backstage = 
     editor : null
     script : null
+    html : null
     css : null
     toBackstage : ->
       page = document.getElementById 'backstage-page'
@@ -33,14 +34,18 @@ unless @Backstage?
       page.className = ''
 
     toScript : ->
-      @editor.setValue @script ? ''
-      @editor.setOption 'mode', 'javascript'
+      # @editor.setValue @script ? ''
+      # @editor.setOption 'mode', 'javascript'
     toHtml : ->
-      @editor.setValue document.documentElement.innerHTML
-      @editor.setOption 'mode', 'xml'
+      @html = CodeMirror document.getElementById('backstage-editor-html'),
+      value : document.documentElement.innerHTML
+      mode : 'xml'
+      lineNumbers : true
     toCss : ->
-      @editor.setValue @css ? ''
-      @editor.setOption 'mode', 'css'
+      @css = CodeMirror document.getElementById('backstage-editor-css'),
+        value : @css
+        mode : 'css'
+        lineNumbers : true
 
 
   get window.location.href.replace(/\.html?$/, '.js'), 'text/html', (result) -> Backstage.script = result
@@ -59,7 +64,7 @@ unless @Backstage?
 
   cmscript = document.createElement 'script'
   cmscript.onload = ->
-    Backstage.editor = CodeMirror document.getElementById('backstage-editor'),
+    Backstage.script = CodeMirror document.getElementById('backstage-editor-script'),
       value : Backstage.script 
       mode : 'javascript'
       lineNumbers : true
@@ -83,13 +88,8 @@ unless @Backstage?
   
   front = document.createElement 'div'
   front.id = 'backstage-front'
-  front.innerHTML = document.body.innerHTML + '\n'
+  front.innerHTML = document.body.innerHTML + '\n' # too bad. you lose dynamically assigned handler and others.
   document.body.innerHTML = ''
-  # cs = document.body.children
-  # count = cs.length
-  # while --count >= 0
-  #   child = cs[0]
-  #   front.appendChild child if child.tagName isnt 'SCRIPT'
   page.appendChild front
 
   page.appendChild document.createTextNode '\n'
@@ -113,9 +113,21 @@ unless @Backstage?
 
   editor = document.createElement 'div'
   editor.id = 'backstage-editor'
+  editor.innerHTML =
+    '''
+    <div id="backstage-editor-script" class="backstage-editor"></div>
+    <div id="backstage-editor-html" class="backstage-editor"></div>
+    <div id="backstage-editor-css" class="backstage-editor"></div>
+    '''
   back.appendChild editor
 
   back.appendChild document.createTextNode '\n'
+
+  frontsw = document.createElement 'div'
+  frontsw.id = 'frontstage'
+  frontsw.className = 'backstage-switch'
+  frontsw.innerHTML = 'f'
+  back.appendChild frontsw
 
   document.body.appendChild container
   document.body.appendChild document.createTextNode '\n'

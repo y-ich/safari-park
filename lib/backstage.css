@@ -17,11 +17,18 @@
     zoom:1;
 }
 
+html, body {
+  width: 100%;
+  height: 100%;
+}
+
 #backstage-container {
+  height: 100%;
   -webkit-perspective: 600;
 }
 
 #backstage-page {
+  height: 100%;
   -webkit-transform-style: preserve-3d;
   -webkit-transition-property: -webkit-transform;
   -webkit-transition-duration: 1.5s;
@@ -32,12 +39,16 @@
 }
 
 #backstage-front {
+  width: 100%;
+  height: 100%;
   position: absolute;
   -webkit-backface-visibility: hidden;
+  opacity: 0.99; /* work around for visibility of children */
 }
 
 #backstage-back {
   width: 100%;
+  height: 100%;
   position: absolute;
   -webkit-backface-visibility: hidden;
   -webkit-transform: rotateY(180deg);
@@ -92,4 +103,8 @@ ul.tab li a.yellow {
 ul.tab li a:hover {
   position: relative;
   bottom: 6px;
+}
+
+#backstage-editor .backstage-editor {
+  position: absolute;
 }
