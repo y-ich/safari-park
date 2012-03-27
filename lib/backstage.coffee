@@ -88,8 +88,13 @@ unless @Backstage?
   
   front = document.createElement 'div'
   front.id = 'backstage-front'
-  front.innerHTML = document.body.innerHTML + '\n' # too bad. you lose dynamically assigned handler and others.
-  document.body.innerHTML = ''
+  cs = document.body.children
+  count = cs.length
+  while --count >= 0
+    child = cs[0]
+    if child.tagName isnt 'SCRIPT'
+      front.appendChild child
+      front.appendChild document.createTextNode '\n'
   page.appendChild front
 
   page.appendChild document.createTextNode '\n'
@@ -143,3 +148,7 @@ unless @Backstage?
   document.getElementById('backstage-css').addEventListener 'click', (event) ->
     event.preventDefault()
     Backstage.toCss()
+
+  document.getElementById('frontstage').addEventListener 'click', (event) ->
+    Backstage.toFrontstage()
+    
