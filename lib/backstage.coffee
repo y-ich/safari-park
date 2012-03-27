@@ -6,6 +6,8 @@
 
 site = 'http://localhost/~yuji/safari-park'
 
+loadCM = false
+
 get = (url, type, callback) ->
   req = new XMLHttpRequest();
   req.open 'GET', url, true
@@ -20,6 +22,17 @@ get = (url, type, callback) ->
 
 
 unless @Backstage?
+  # cm means CodeMirror, bs means backstage
+  cmcss = document.createElement 'link'
+  cmcss.rel = 'stylesheet'
+  cmcss.href = site + '/lib/codemirror.css'
+  document.head.appendChild cmcss
+
+  bscss = document.createElement 'link'
+  bscss.rel = 'stylesheet'
+  bscss.href = site + '/lib/backstage.css?time=' + (new Date).valueOf()
+  document.head.appendChild bscss
+
   @Backstage = 
     scriptEditor : ->
       # @editor.setValue @script ? ''
@@ -53,50 +66,23 @@ unless @Backstage?
       page.className = ''
 
 
-  get window.location.href.replace(/\.html?$/, '.js'), 'text/html', (result) -> Backstage.script = result
-  get window.location.href.replace(/\.html?$/, '.css'), 'text/css', (result) -> Backstage.css = result
-
-  # cm means CodeMirror, bs means backstage
-  cmcss = document.createElement 'link'
-  cmcss.rel = 'stylesheet'
-  cmcss.href = site + '/lib/codemirror.css'
-  document.head.appendChild cmcss
-
-  bscss = document.createElement 'link'
-  bscss.rel = 'stylesheet'
-  bscss.href = site + '/lib/backstage.css'
-  document.head.appendChild bscss
-
   cmscript = document.createElement 'script'
   cmscript.onload = ->
-    Backstage.scriptEditor = CodeMirror document.getElementById('backstage-editor-script'),
-      value : Backstage.script 
-      mode : 'javascript'
-      lineNumbers : true
-      lineWrapping : true
+    loadCM = true
+    initialize()
 
-    Backstage.htmlEditor = CodeMirror document.getElementById('backstage-editor-html'),
-      value : document.documentElement.innerHTML
-      mode : 'xml'
-      lineNumbers : true
-      lineWrapping : true
+  get window.location.href.replace(/\.html?$/, '.js'), 'text/html', (result) ->
+    Backstage.script = result
+    initialize()
 
-    Backstage.cssEditor = CodeMirror document.getElementById('backstage-editor-css'),
-      value : Backstage.css
-      mode : 'css'
-      lineNumbers : true
-      lineWrapping : true
-
-    Backstage.switch 'scriptEditor'
-
-    setTimeout Backstage.toBackstage, 100
+  get window.location.href.replace(/\.html?$/, '.css'), 'text/css', (result) ->
+    Backstage.css = result
 
   cmscript.src = site + '/lib/codemirror.js'
   document.head.appendChild cmscript
 
   container = document.createElement 'div'
   container.id = 'backstage-container'
-
   container.appendChild document.createTextNode '\n'
 
   page = document.createElement 'div'
@@ -108,13 +94,11 @@ unless @Backstage?
   
   front = document.createElement 'div'
   front.id = 'backstage-front'
-  cs = document.body.children
+  cs = document.body.childNodes
   count = cs.length
   while --count >= 0
     child = cs[0]
-    if child.tagName isnt 'SCRIPT'
-      front.appendChild child
-      front.appendChild document.createTextNode '\n'
+    front.appendChild child
   page.appendChild front
 
   page.appendChild document.createTextNode '\n'
@@ -175,9 +159,40 @@ unless @Backstage?
   document.getElementById('frontstage').addEventListener 'click', (event) ->
     Backstage.toFrontstage()
 
+
 switchTab = (elem) ->
   tabs = elem.parentElement.parentElement.children
   for i in [0...tabs.length]
     tabs[i].className = ''
 
   elem.parentElement.className = 'none'
+
+initialize = ->
+  return unless loadCM and Backstage.script?
+
+  document.getElementById('backstage-container').style.visibility = 'hidden'
+
+  Backstage.scriptEditor = CodeMirror document.getElementById('backstage-editor-script'),
+    value : Backstage.script 
+    mode : 'javascript'
+    lineNumbers : true
+    lineWrapping : true
+
+  Backstage.htmlEditor = CodeMirror document.getElementById('backstage-editor-html'),
+    value : document.documentElement.innerHTML
+    mode : 'xml'
+    lineNumbers : true
+    lineWrapping : true
+
+  Backstage.cssEditor = CodeMirror document.getElementById('backstage-editor-css'),
+    value : Backstage.css
+    mode : 'css'
+    lineNumbers : true
+    lineWrapping : true
+
+  Backstage.switch 'scriptEditor'
+
+  setTimeout ->
+      document.getElementById('backstage-container').style.visibility = 'visible'
+      Backstage.toBackstage()
+    , 100 # wait for loading css.
