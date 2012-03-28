@@ -25,6 +25,16 @@ typeOf = (url) ->
             'coffeescript'
 
 
+baseOf = (url) ->
+    url.replace /\/[^\/]*$/, ''
+
+base = baseOf(window.location.href)
+
+
+fileOf = (url) ->
+    url.replace /^.*\//, ''
+
+
 get = (url, type, callback) ->
     req = new XMLHttpRequest();
     req.open 'GET', url, true
@@ -122,11 +132,15 @@ sourceTargets = ->
     list = document.getElementsByTagName('script')
     for i in [0...list.length]
         url = list[i].dataset.source ? list[i].src
-        result.push url unless /\//.test url # current base
+        continue if url is '' # internal script
+        if not /\//.test(url) or baseOf(url) is base
+            result.push fileOf url
 
     list = document.getElementsByTagName('link')
     for i in [0...list.length]
-        result.push list[i].href if list[i].rel is 'stylesheet' and not /\//.test list[i].href
+        if list[i].rel is 'stylesheet' and
+            (not /\//.test(list[i].href) or baseOf(list[i].href) is base)
+                result.push fileOf list[i].href
     result
 
 
