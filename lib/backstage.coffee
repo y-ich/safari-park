@@ -52,6 +52,11 @@ setBackstage = ->
     window.Backstage =
         editors : []
         switch : (index) ->
+            tabs = document.getElementById('backstage-tabs').children
+            tabs[i].className = '' for i in [0...tabs.length]
+            console.log index
+            document.getElementById('backstage-tab-' + index).parentElement.className = 'none'
+
             for e in @editors
                 e.getWrapperElement().style.display = 'none'
             @editors[index].getWrapperElement().style.display = 'block'
@@ -61,14 +66,6 @@ setBackstage = ->
 
         toFrontstage : ->
             document.getElementById('backstage-page').className = ''
-
-
-switchTab = (elem) ->
-    tabs = elem.parentElement.parentElement.children
-    for i in [0...tabs.length]
-        tabs[i].className = ''
-
-    elem.parentElement.className = 'none'
 
 
 loadCodeMirror = ->
@@ -89,7 +86,22 @@ loadBackstage = ->
         dependencies.bscss = true
         ready()
 
-loadTargets = ->
+
+sourceTargets = ->
+    result = [window.location.href.replace(/^.*\//, '')]
+
+    list = document.getElementsByTagName('script')
+    for i in [0...list.length]
+        url = list[i].dataset.source ? list[i].src
+        result.push url unless /\//.test url # current base
+
+    list = document.getElementsByTagName('link')
+    for i in [0...list.length]
+        result.push list[i].href if list[i].rel is 'stylesheet' and not /\//.test list[i].href
+    result
+
+
+loadTargets = (files) ->
     list = document.getElementsByTagName('script')
     for i in [0...list.length]
         url = list[i].dataset.source ? list[i].src
@@ -101,7 +113,6 @@ loadTargets = ->
                 type = 'text/coffeescript'
         get url, type, (result) ->
 
-        list[i].src
     get window.location.href.replace(/\.html?$/, '.js'), 'text/html', (result) ->
         window.Backstage.script = result
         ready()
@@ -116,21 +127,9 @@ ready = ->
 
     document.getElementById('backstage-container').style.visibility = 'hidden'
 
-    window.Backstage.editors[0] = CodeMirror document.getElementById('backstage-editor-script'),
-        value : Backstage.script 
-        mode : 'javascript'
-        lineNumbers : true
-        lineWrapping : true
-
-    window.Backstage.editors[1] = CodeMirror document.getElementById('backstage-editor-html'),
+    window.Backstage.editors[0] = CodeMirror document.getElementById('backstage-editor-0'),
         value : document.documentElement.innerHTML
         mode : 'xml'
-        lineNumbers : true
-        lineWrapping : true
-
-    window.Backstage.editors[2] = CodeMirror document.getElementById('backstage-editor-css'),
-        value : Backstage.css
-        mode : 'css'
         lineNumbers : true
         lineWrapping : true
 
@@ -140,7 +139,7 @@ ready = ->
     window.Backstage.toBackstage()
 
 
-layout = ->
+layout = (files) ->
     container = document.createElement 'div'
     container.id = 'backstage-container'
     container.innerHTML =
@@ -156,52 +155,38 @@ layout = ->
                     <div id="frontstage" class="backstage-switch">f</div>
                 </div>
             </div>
-        '''   
+        '''
+
     front = container.children[0].children[0]
     childNodes = document.body.childNodes
     count = childNodes.length
     while --count >= 0
         child = childNodes[0]
-        front.appendChild  document.createTextNode '            \n'
+        front.appendChild document.createTextNode '            \n'
         front.appendChild child
-    front.appendChild  document.createTextNode '        \n'
+    front.appendChild document.createTextNode '        \n'
 
     tab = container.children[0].children[1].children[0]
-    tab.innerHTML =
-        '''
-        <li class="none"><a id="backstage-script" href="#script" class="blue">Script</a></li>
-        <li><a id="backstage-html" href="#html" class="red">HTML</a></li>
-        <li><a id="backstage-css" href="#css" class="green">CSS</a></li>
-        '''
+    tab.id = 'backstage-tabs'
+    tab.innerHTML = '<li class="none"><a id="backstage-tab-0" href="#">' +
+        files[0] + '</a></li>\n'
+
+    for i in [1...files.length]
+        tab.innerHTML += '<li><a id="backstage-tab-' + i + '" href="#">' +
+            files[i] + '</a></li>\n'
 
     editor = container.children[0].children[1].children[1]
-    editor.innerHTML =
-        '''
-        <div id="backstage-editor-script" class="backstage-editor"></div>
-        <div id="backstage-editor-html" class="backstage-editor"></div>
-        <div id="backstage-editor-css" class="backstage-editor"></div>
-        '''
+    editor.innerHTML = '<div id="backstage-editor-0" class="backstage-editor"></div>'
 
     document.body.appendChild container
     document.body.appendChild document.createTextNode '\n'
 
-    document.getElementById('backstage-script').addEventListener 'click', (event) ->
-        event.preventDefault()
-        switchTab this
-        Backstage.switch 0
-
-    document.getElementById('backstage-html').addEventListener 'click', (event) ->
-        event.preventDefault()
-        switchTab this
-        Backstage.switch 1
-
-    document.getElementById('backstage-css').addEventListener 'click', (event) ->
-        event.preventDefault()
-        switchTab this
-        Backstage.switch 2
-
-    document.getElementById('frontstage').addEventListener 'click', (event) ->
-        Backstage.toFrontstage()
+    for i in [0...files.length]
+        document.getElementById('backstage-tab-' + i).addEventListener 'click', ((i) ->
+                (event) ->
+                    event.preventDefault()
+                    Backstage.switch i
+            )(i)
 
 
 # initiailize
@@ -210,7 +195,6 @@ unless Backstage?
     setBackstage()
     loadCodeMirror()
     loadBackstage()
-    loadTargets()
-    layout()
-
-
+    targets = sourceTargets()
+    loadTargets(targets)
+    layout(targets)
