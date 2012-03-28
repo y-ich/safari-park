@@ -5,7 +5,7 @@
 ###
 
 
-site = 'http://localhost/~yuji/safari-park'
+site = 'http://192.168.1.8/~yuji/safari-park'
 
 dependencies = {}
 
@@ -89,6 +89,7 @@ setBackstage = ->
             else
                 div = document.createElement 'div'
                 div.id = 'backstage-editor-' + index
+                div.className = 'backstage-editor'
                 document.getElementById('backstage-editors').appendChild div
                 file = tabs[index].children[0].innerHTML
                 type = typeOf file
@@ -100,11 +101,11 @@ setBackstage = ->
                         (result) ->
                             cm.setValue result
                     )(@editors[index])
-        toBackstage : ->
-            document.getElementById('backstage-page').className = 'flipped'
-
-        toFrontstage : ->
-            document.getElementById('backstage-page').className = ''
+        toggle : ->
+            document.body.className = if /opened/.test document.body.className
+                    document.body.className.replace ' opened', ''
+                else
+                    document.body.className + ' opened'
 
 
 loadCodeMirror = ->
@@ -168,8 +169,6 @@ ready = ->
     for key, value of dependencies
         return unless value
 
-    document.getElementById('backstage-container').style.visibility = 'hidden'
-
     window.Backstage.editors[0] = CodeMirror document.getElementById('backstage-editor-0'),
         value : document.documentElement.innerHTML
         mode : 'xml'
@@ -178,47 +177,30 @@ ready = ->
 
     window.Backstage.switch 0
 
-    document.getElementById('backstage-container').style.visibility = 'visible'
-    window.Backstage.toBackstage()
+    window.Backstage.toggle()
 
 
 layout = (files) ->
     container = document.createElement 'div'
-    container.id = 'backstage-container'
+    container.id = 'backstage-back'
     container.innerHTML =
         '''
-            <div id="backstage-page">
-                <div id="backstage-front">
-                </div>
-                <div id="backstage-back">
-                    <ul class="tab clear">
-                    </ul>
-                    <div id="backstage-editors">
-                    </div>
-                    <div id="frontstage" class="backstage-switch">f</div>
-                </div>
+            <ul class="tab clear">
+            </ul>
+            <div id="backstage-editors">
             </div>
         '''
 
-    front = container.children[0].children[0]
-    childNodes = document.body.childNodes
-    count = childNodes.length
-    while --count >= 0
-        child = childNodes[0]
-        front.appendChild document.createTextNode '            \n'
-        front.appendChild child
-    front.appendChild document.createTextNode '        \n'
-
-    tab = container.children[0].children[1].children[0]
-    tab.id = 'backstage-tabs'
-    tab.innerHTML = '<li class="none"><a id="backstage-tab-0" href="#">' +
+    tabs = container.children[0]
+    tabs.id = 'backstage-tabs'
+    tabs.innerHTML = '<li class="none"><a id="backstage-tab-0" href="#">' +
         files[0] + '</a></li>\n'
 
     for i in [1...files.length]
-        tab.innerHTML += '<li><a id="backstage-tab-' + i + '" href="#">' +
+        tabs.innerHTML += '<li><a id="backstage-tab-' + i + '" href="#">' +
             files[i] + '</a></li>\n'
 
-    editor = container.children[0].children[1].children[1]
+    editor = container.children[1]
     editor.innerHTML = '<div id="backstage-editor-0" class="backstage-editor"></div>'
 
     document.body.appendChild container
@@ -230,9 +212,6 @@ layout = (files) ->
                     event.preventDefault()
                     Backstage.switch i
             )(i)
-
-    document.getElementById('frontstage').addEventListener 'click', ->
-        Backstage.toFrontstage()
 
 
 # initiailize

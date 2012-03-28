@@ -17,15 +17,15 @@
     zoom:1;
 }
 
-html, body {
-  width: 100%;
-  height: 100%;
+body {
+  -webkit-transition-property: -webkit-transform;
+  -webkit-transition-duration: 1s;
 }
 
 .backstage-switch {
-  position: fixed;
+  position: absolute;
   right: 10px;
-  bottom: 10px;
+  top: 10px;
   width: 13px;
   height: 13px;
   line-height: 13px;
@@ -37,37 +37,12 @@ html, body {
   -webkit-border-radius: 50%;
 }
 
-#backstage-container {
-  height: 100%;
-  -webkit-perspective: 600;
-}
-
-#backstage-page {
-  height: 100%;
-  -webkit-transform-style: preserve-3d;
-  -webkit-transition-property: -webkit-transform;
-  -webkit-transition-duration: 1.5s;
-}
-
-#backstage-page.flipped {
-  -webkit-transform: rotateY(180deg);
-}
-
-#backstage-front {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  -webkit-backface-visibility: hidden;
-  opacity: 0.99; /* work around for visibility of children */
-}
-
 #backstage-back {
   width: 100%;
-  height: 100%;
+  height: 307px;
   background-color: white;
   position: absolute;
-  -webkit-backface-visibility: hidden;
-  -webkit-transform: rotateY(180deg);
+  z-index: -1;
 }
 
 ul.tab {
@@ -116,11 +91,41 @@ ul.tab li a.yellow {
   border-top: 5px #ffd242 solid;
 }
 
-ul.tab li a:hover {
-  position: relative;
-  bottom: 6px;
+#backstage-editors .backstage-editor {
+  position: absolute;
 }
 
-#backstage-editor .backstage-editor {
-  position: absolute;
+#backstage-editors .CodeMirror {
+  width: 100%;
+  height: 100%;
+}
+
+#backstage-editors .CodeMirror-scroll {
+  width: 100%;
+  height: 100%;
+  overflow: scroll;
+}
+
+@media (min-device-width: 768px) and (orientation: portrait) { /* iPad Portrait 768x1004 */
+  body.opened {
+    -webkit-transform: translateY(697px);
+  }
+  #backstage-back {
+    top: -697px;
+  }
+  #backstage-editors .backstage-editor {
+    height: 667px;
+  }
+}
+
+@media (min-device-width: 768px) and (orientation: landscape) { /* iPad Landscape 1024x748 */
+  body.opened {
+    -webkit-transform: translateY(326px);
+  }
+  #backstage-back {
+    top: -326px;
+  }
+  #backstage-editors .backstage-editor {
+    height: 296px;
+  }
 }

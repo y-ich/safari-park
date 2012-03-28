@@ -1,14 +1,16 @@
 # test.coffee
 
-site = 'http://localhost/~yuji/safari-park/'
+console.log 'pass'
+
+site = 'http://192.168.1.8/~yuji/safari-park/'
 
 sw = document.createElement 'div'
 sw.id = 'backstage'
 sw.className = 'backstage-switch'
 sw.innerHTML = 'b'
-sw.style['position'] = 'fixed'
+sw.style['position'] = 'absolute'
 sw.style['right'] = '10px'
-sw.style['bottom'] = '10px'
+sw.style['top'] = '10px'
 sw.style['width'] = '13px'
 sw.style['height'] = '13px'
 sw.style['line-height'] = '13px'
@@ -23,7 +25,7 @@ document.body.appendChild sw
 
 sw.addEventListener 'click', ->
   if Backstage?
-    Backstage.toBackstage()
+    Backstage.toggle()
   else
     script = document.createElement 'script'
     script.src = site + 'lib/backstage.js?time=' + (new Date).valueOf() # prevent to use a cache.
