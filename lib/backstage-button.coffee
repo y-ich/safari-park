@@ -1,5 +1,7 @@
 # test.coffee
 
+site = 'http://localhost/~yuji/safari-park/'
+
 sw = document.createElement 'div'
 sw.id = 'backstage'
 sw.className = 'backstage-switch'
@@ -24,5 +26,5 @@ sw.addEventListener 'click', ->
     Backstage.toBackstage()
   else
     script = document.createElement 'script'
-    script.src = 'lib/backstage.js?time=' + (new Date).valueOf() # prevent to use a cache.
+    script.src = site + 'lib/backstage.js?time=' + (new Date).valueOf() # prevent to use a cache.
     document.body.appendChild script

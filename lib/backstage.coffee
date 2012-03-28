@@ -217,6 +217,9 @@ layout = (files) ->
                     Backstage.switch i
             )(i)
 
+    document.getElementById('frontstage').addEventListener 'click', ->
+        Backstage.toFrontstage()
+
 
 # initiailize
 
