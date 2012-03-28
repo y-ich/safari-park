@@ -9,6 +9,20 @@ site = 'http://localhost/~yuji/safari-park'
 
 dependencies = {}
 
+typeOf = (url) ->
+    switch url.replace(/^.*\./, '')
+        when 'htm'
+            'html'
+        when 'html'
+            'html'
+        when 'js'
+            'javascript'
+        when 'css'
+            'css'
+        when 'coffee'
+            'coffeescript'
+
+
 get = (url, type, callback) ->
     req = new XMLHttpRequest();
     req.open 'GET', url, true
@@ -54,13 +68,25 @@ setBackstage = ->
         switch : (index) ->
             tabs = document.getElementById('backstage-tabs').children
             tabs[i].className = '' for i in [0...tabs.length]
-            console.log index
-            document.getElementById('backstage-tab-' + index).parentElement.className = 'none'
+            tabs[index].className = 'none'
 
-            for e in @editors
-                e.getWrapperElement().style.display = 'none'
-            @editors[index].getWrapperElement().style.display = 'block'
-
+            e.getWrapperElement().style.display = 'none' for e in @editors when e?
+            if @editors[index]?
+                @editors[index].getWrapperElement().style.display = 'block'
+            else
+                div = document.createElement 'div'
+                div.id = 'backstage-editor-' + index
+                document.getElementById('backstage-editors').appendChild div
+                file = tabs[index].children[0].innerHTML
+                type = typeOf file
+                @editors[index] = CodeMirror div,
+                    mode : type # assuming file is not html
+                    lineNumbers : true
+                    lineWrapping : true
+                get file, "text/#{type}", ((cm) ->
+                        (result) ->
+                            cm.setValue result
+                    )(@editors[index])
         toBackstage : ->
             document.getElementById('backstage-page').className = 'flipped'
 
