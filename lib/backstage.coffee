@@ -11,6 +11,8 @@ dependencies = {}
 
 typeOf = (url) ->
     switch url.replace(/^.*\./, '')
+        when ''
+            'html'
         when 'htm'
             'html'
         when 'html'
@@ -34,6 +36,7 @@ get = (url, type, callback) ->
             else
                 console.log req.status
     req.send()
+
 
 loadCSS = (url, callback) ->
     css = document.createElement 'link'
