@@ -111,16 +111,20 @@ ul.tab li a.yellow {
   -webkit-overflow-scrolling: touch;
 }
 
+.CodeMirror-scroll {
+  position: static; /* This is a work around for touch scrolling */
+}
+
 @media (min-device-width: 768px) and (orientation: portrait) { /* iPad Portrait 768x1004 */
   body.opened {
-    -webkit-transform: translateY(607px);
+    -webkit-transform: translateY(337px);
   }
   #backstage-back {
-    height: 607px;
-    top: -607px;
+    height: 337px;
+    top: -337px;
   }
   #backstage-editors {
-    height: 577px;    
+    height: 307px;    
   }
   #backstage-editors .backstage-editor {
     height: 100%;

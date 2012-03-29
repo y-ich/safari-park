@@ -9,6 +9,11 @@ site = 'http://192.168.1.8/~yuji/safari-park'
 
 dependencies = {}
 
+defaultCMOptions = 
+    lineNumbers : true
+    lineWrapping : false
+    readOnly : 'nocursor'
+
 typeOf = (url) ->
     switch url.replace(/^.*\./, '')
         when ''
@@ -46,6 +51,16 @@ get = (url, type, callback) ->
             else
                 console.log 'get error: ' + req.status
     req.send()
+
+
+overwrite = (obj1, obj2) ->
+    obj = {}
+    keys = (key for own key, value of obj1)
+    for own key, value of obj2
+        keys.push key unless key in obj1
+    for key in keys
+        obj[key] = obj2[key] ? obj1[key]
+    obj
 
 
 loadCSS = (url, callback) ->
@@ -94,9 +109,7 @@ setBackstage = ->
                 file = tabs[index].children[0].innerHTML
                 type = typeOf file
                 @editors[index] = CodeMirror div,
-                    mode : type # assuming file is not html
-                    lineNumbers : true
-                    lineWrapping : false
+                    overwrite(defaultCMOptions, { mode : type }) # assuming file is not html
                 get file, "text/#{type}", ((cm) ->
                         (result) ->
                             cm.setValue result
@@ -150,11 +163,10 @@ ready = ->
         return unless value
 
     window.Backstage.editors[0] = CodeMirror document.getElementById('backstage-editor-0'),
-        value : document.documentElement.innerHTML
-        mode : 'xml'
-        lineNumbers : true
-        lineWrapping : false
-
+        overwrite(defaultCMOptions, 
+            value : document.documentElement.innerHTML
+            mode : 'xml'
+        )
     window.Backstage.switch 0
 
     window.Backstage.toggle()
