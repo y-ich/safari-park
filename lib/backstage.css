@@ -17,13 +17,11 @@
     zoom:1;
 }
 
-/*
 body {
   -webkit-transform-style: preserve-3d;
   -webkit-transition-property: -webkit-transform;
   -webkit-transition-duration: 1s;
 }
-*/
 
 .backstage-switch {
   position: absolute;
