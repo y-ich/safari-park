@@ -9,10 +9,10 @@ site = 'http://192.168.1.8/~yuji/safari-park'
 
 dependencies = {}
 
-defaultCMOptions = 
+defaultCMOptions =
     lineNumbers : true
     lineWrapping : false
-    readOnly : 'nocursor'
+    readOnly : true # 'nocursor'
 
 typeOf = (url) ->
     switch url.replace(/^.*\./, '')
@@ -110,6 +110,7 @@ setBackstage = ->
                 type = typeOf file
                 @editors[index] = CodeMirror div,
                     overwrite(defaultCMOptions, { mode : type }) # assuming file is not html
+                preventPageScroll @editors[index]
                 get file, "text/#{type}", ((cm) ->
                         (result) ->
                             cm.setValue result
@@ -158,6 +159,15 @@ sourceTargets = ->
     result
 
 
+preventPageScroll = (codemirror) ->
+    codemirror.bodyTop = 0
+    $(codemirror.getInputField()).bind 'mousedown', ->
+        codemirror.bodyTop = document.body.scrollTop
+    $(codemirror.getInputField()).bind 'focus', ->
+        window.scrollTo 0, codemirror.bodyTop
+
+
+
 ready = ->
     for key, value of dependencies
         return unless value
@@ -167,6 +177,7 @@ ready = ->
             value : document.documentElement.innerHTML
             mode : 'xml'
         )
+    preventPageScroll window.Backstage.editors[0]
     window.Backstage.switch 0
 
     window.Backstage.toggle()
