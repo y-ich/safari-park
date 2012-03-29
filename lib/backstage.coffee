@@ -44,7 +44,7 @@ get = (url, type, callback) ->
             if 200 <= req.status < 300
                 callback req.responseText
             else
-                console.log req.status
+                console.log 'get error: ' + req.status
     req.send()
 
 
@@ -96,7 +96,7 @@ setBackstage = ->
                 @editors[index] = CodeMirror div,
                     mode : type # assuming file is not html
                     lineNumbers : true
-                    lineWrapping : true
+                    lineWrapping : false
                 get file, "text/#{type}", ((cm) ->
                         (result) ->
                             cm.setValue result
@@ -145,26 +145,6 @@ sourceTargets = ->
     result
 
 
-loadTargets = (files) ->
-    list = document.getElementsByTagName('script')
-    for i in [0...list.length]
-        url = list[i].dataset.source ? list[i].src
-
-        switch url.replace(/^.*\./, '')
-            when 'js'
-                type = 'text/javascript'
-            when 'coffee'
-                type = 'text/coffeescript'
-        get url, type, (result) ->
-
-    get window.location.href.replace(/\.html?$/, '.js'), 'text/html', (result) ->
-        window.Backstage.script = result
-        ready()
-
-    get window.location.href.replace(/\.html?$/, '.css'), 'text/css', (result) ->
-        window.Backstage.css = result
-
-
 ready = ->
     for key, value of dependencies
         return unless value
@@ -173,7 +153,7 @@ ready = ->
         value : document.documentElement.innerHTML
         mode : 'xml'
         lineNumbers : true
-        lineWrapping : true
+        lineWrapping : false
 
     window.Backstage.switch 0
 
@@ -213,6 +193,9 @@ layout = (files) ->
                     Backstage.switch i
             )(i)
 
+    document.getElementById('backstage-editors').addEventListener 'touchmove', (event) ->
+        event.stopPropagation()
+
 
 # initiailize
 
@@ -221,5 +204,4 @@ unless Backstage?
     loadCodeMirror()
     loadBackstage()
     targets = sourceTargets()
-    loadTargets(targets)
     layout(targets)

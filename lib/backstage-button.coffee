@@ -1,7 +1,5 @@
 # test.coffee
 
-console.log 'pass'
-
 site = 'http://192.168.1.8/~yuji/safari-park/'
 
 sw = document.createElement 'div'
@@ -21,6 +19,7 @@ sw.style['font-style'] = 'italic'
 sw.style['background-color'] = 'gray'
 sw.style['-webkit-border-radius'] = '50%'
 
+document.body.appendChild document.createTextNode '\n'
 document.body.appendChild sw
 
 sw.addEventListener 'click', ->
