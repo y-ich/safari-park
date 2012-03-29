@@ -161,9 +161,9 @@ sourceTargets = ->
 
 preventPageScroll = (codemirror) ->
     codemirror.bodyTop = 0
-    $(codemirror.getInputField()).bind 'mousedown', ->
+    codemirror.getInputField().addEventListener 'mousedown', ->
         codemirror.bodyTop = document.body.scrollTop
-    $(codemirror.getInputField()).bind 'focus', ->
+    codemirror.getInputField().addEventListener 'focus', ->
         window.scrollTo 0, codemirror.bodyTop
 
 
