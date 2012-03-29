@@ -92,6 +92,10 @@ ul.tab li a.yellow {
   border-top: 5px #ffd242 solid;
 }
 
+#backstage-editors {
+  position: relative; /* you need this for correct meaning of 100% height for .backstage-editor */
+}
+
 #backstage-editors .backstage-editor {
   position: absolute;
   width: 100%;
@@ -121,8 +125,7 @@ ul.tab li a.yellow {
     height: 577px;    
   }
   #backstage-editors .backstage-editor {
-    /* height: 100%; 100% means 607px rather than 577px. I don't know why. */
-    height: 577%;
+    height: 100%;
   }
 }
 
@@ -138,6 +141,6 @@ ul.tab li a.yellow {
     height: 296px;
   }
   #backstage-editors .backstage-editor {
-    height: 296px;
+    height: 100%;
   }
 }
