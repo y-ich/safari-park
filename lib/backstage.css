@@ -19,6 +19,9 @@
 
 body {
   -webkit-transform-style: preserve-3d;
+  /* preserve-3d makes transition animation smooth on iPad,
+  but make text scrolling miserable on desktop safari 5.1.2.
+  though text scrolling is good on desktop chrome 18.0.1025.142 */
   -webkit-transition-property: -webkit-transform;
   -webkit-transition-duration: 1s;
 }
@@ -111,8 +114,9 @@ ul.tab li a.yellow {
   -webkit-overflow-scrolling: touch;
 }
 
-.CodeMirror-scroll {
-  position: static; /* This is a work around for touch scrolling */
+#backstage-editors .CodeMirror-scroll * {
+  -webkit-transform-style: preserve-3d;  
+  /* This is a work around for touch scrolling */
 }
 
 @media (min-device-width: 768px) and (orientation: portrait) { /* iPad Portrait 768x1004 */
