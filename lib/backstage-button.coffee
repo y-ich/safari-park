@@ -7,8 +7,6 @@ sw.id = 'backstage'
 sw.className = 'backstage-switch'
 sw.innerHTML = 'b'
 sw.style['position'] = 'absolute'
-sw.style['right'] = '10px'
-sw.style['top'] = '10px'
 sw.style['width'] = '13px'
 sw.style['height'] = '13px'
 sw.style['line-height'] = '13px'
@@ -18,6 +16,12 @@ sw.style['font-size'] = '13px'
 sw.style['font-style'] = 'italic'
 sw.style['background-color'] = 'gray'
 sw.style['-webkit-border-radius'] = '50%'
+for key, value of backstageConfig
+    sw.style[key] = value
+    console.log key
+    console.log sw.style[key]
+sw.style['right'] = '10px' if sw.style['right'] is '' and sw.style['left'] is ''
+sw.style['top'] = '10px' if sw.style['top'] is '' and sw.style['bottom'] is ''
 
 document.body.appendChild document.createTextNode '\n'
 document.body.appendChild sw
