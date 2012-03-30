@@ -24,27 +24,31 @@ body {
   width: 100%;
   background-color: white;
   position: absolute;
+  -webkit-transform-style: preserve-3d;
 }
 
 ul.tab {
   margin: 0;
   padding: 0;
-  border-bottom: 2px #ddd solid;
+  border-bottom: 1px #ddd solid;
 }
 
 ul.tab li {
   float: left;
   margin: 0 0 0 5px;
   position: relative;
-  bottom: -2px;
+  bottom: -1px;
   list-style-type: none;
-  border: 1px #ddd solid;
-  border-top: none;
-  border-bottom: 2px #ddd solid;
+  border: 1px #ddd  solid;
+  border-bottom: 1px #ddd  solid;
+  -webkit-border-top-right-radius: 6px;
+  border-top-right-radius: 6px;
+  -webkit-border-top-left-radius: 6px;
+  border-top-left-radius: 6px;
 }
 
 ul.tab li.none {
-  border-bottom: 2px #fff solid;
+  border-bottom: 1px #fff solid;
   font-weight: bold;
 }
 
@@ -54,22 +58,10 @@ ul.tab li a {
   padding: 3px 10px 5px;
   text-decoration: none;
   background: #fff;
-}
-
-ul.tab li a.blue {
-  border-top: 5px #2384dc solid;
-}
-
-ul.tab li a.green {
-  border-top: 5px #4cbb47 solid;
-}
-
-ul.tab li a.red {
-  border-top: 5px #dd1d25 solid;
-}
-
-ul.tab li a.yellow {  
-  border-top: 5px #ffd242 solid;
+  -webkit-border-top-right-radius: 6px;
+  border-top-right-radius: 6px;
+  -webkit-border-top-left-radius: 6px;
+  border-top-left-radius: 6px;
 }
 
 #backstage-editors {
@@ -93,7 +85,7 @@ ul.tab li a.yellow {
   -webkit-overflow-scrolling: touch;
 }
 
-#backstage-editors .CodeMirror-scroll * {
+#backstage-editors .CodeMirror-scroll > * {
   -webkit-transform-style: preserve-3d;  
   /* This is a work around for touch scrolling */
 }
