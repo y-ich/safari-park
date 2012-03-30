@@ -180,7 +180,7 @@ layout = (files) ->
     container.id = 'backstage-back'
     container.innerHTML =
         '''
-            <ul class="tab clear">
+            <ul class="tab clearfix">
             </ul>
             <div id="backstage-editors">
             </div>

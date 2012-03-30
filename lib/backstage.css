@@ -4,17 +4,10 @@
  * Copyright (C) 2012 ICHIKAWA, Yuji (New 3 Rs)
  */
 
-/* clearfix */
-.clear:after {
-    content:"";
-    display:block;
-    overflow:hidden;
-}
-.clear:after {
-    clear:both;
-}
-.clear {
-    zoom:1;
+.clearfix:after {
+  content: "";   
+  display: block;   
+  clear: both;   
 }
 
 body {
