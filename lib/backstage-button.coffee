@@ -2,10 +2,6 @@
 
 site = 'http://192.168.1.8/~yuji/safari-park/'
 
-document.body.style['-webkit-transform-style'] = 'preserve-3d'
-# This is a work around against flicker at switching GPU for rendering.
-# As a result, flicker appears when executing this script, doesn't appear when pushing the button.
-
 sw = document.createElement 'div'
 sw.id = 'backstage'
 sw.className = 'backstage-switch'

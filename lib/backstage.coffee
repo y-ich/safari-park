@@ -12,7 +12,7 @@ dependencies = {}
 defaultCMOptions =
     lineNumbers : true
     lineWrapping : false
-    readOnly : true # 'nocursor'
+    readOnly : false # 'nocursor'
 
 typeOf = (url) ->
     switch url.replace(/^.*\./, '')
@@ -218,3 +218,4 @@ unless Backstage?
     setBackstage()
     loadCodeMirror()
     loadBackstage()
+
