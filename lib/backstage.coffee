@@ -109,7 +109,7 @@ setBackstage = ->
                 file = tabs[index].children[0].innerHTML
                 type = typeOf file
                 @editors[index] = CodeMirror div,
-                    overwrite(defaultCMOptions, { mode : type }) # assuming file is not html
+                    overwrite(defaultCMOptions, { mode : if type is 'html' then 'xml' else type }) # assuming file is not html
                 preventPageScroll @editors[index]
                 get file, "text/#{type}", ((cm) ->
                         (result) ->
@@ -167,21 +167,11 @@ preventPageScroll = (codemirror) ->
         window.scrollTo 0, codemirror.bodyTop
 
 
-
 ready = ->
     for key, value of dependencies
         return unless value
-
     layout sourceTargets()
-
-    window.Backstage.editors[0] = CodeMirror document.getElementById('backstage-editor-0'),
-        overwrite(defaultCMOptions, 
-            value : document.documentElement.innerHTML
-            mode : 'xml'
-        )
-    preventPageScroll window.Backstage.editors[0]
     window.Backstage.switch 0
-
     window.Backstage.toggle()
 
 
