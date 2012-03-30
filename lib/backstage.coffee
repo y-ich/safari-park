@@ -172,6 +172,8 @@ ready = ->
     for key, value of dependencies
         return unless value
 
+    layout sourceTargets()
+
     window.Backstage.editors[0] = CodeMirror document.getElementById('backstage-editor-0'),
         overwrite(defaultCMOptions, 
             value : document.documentElement.innerHTML
@@ -226,5 +228,3 @@ unless Backstage?
     setBackstage()
     loadCodeMirror()
     loadBackstage()
-    targets = sourceTargets()
-    layout(targets)

@@ -24,21 +24,7 @@ body {
   though text scrolling is good on desktop chrome 18.0.1025.142 */
   -webkit-transition-property: -webkit-transform;
   -webkit-transition-duration: 1s;
-}
-
-.backstage-switch {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  width: 13px;
-  height: 13px;
-  line-height: 13px;
-  text-align: center;
-  color: white;
-  font-size: 13px;
-  font-style: italic;
-  background-color: gray;
-  -webkit-border-radius: 50%;
+  margin: 0; /* work around to prevent slip of backstage button */
 }
 
 #backstage-back {
