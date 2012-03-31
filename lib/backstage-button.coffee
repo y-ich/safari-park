@@ -16,6 +16,7 @@ sw.style['font-size'] = '13px'
 sw.style['font-style'] = 'italic'
 sw.style['background-color'] = 'gray'
 sw.style['-webkit-border-radius'] = '50%'
+sw.style['z-index'] = '1000'
 if backstageConfig?
     for key, value of backstageConfig
         sw.style[key] = value
