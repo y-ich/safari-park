@@ -15,7 +15,8 @@ defaultCMOptions =
     readOnly : false # 'nocursor'
 
 typeOf = (url) ->
-    switch url.replace(/^.*\./, '')
+    return 'html' unless /\./.test url # no extensions
+    switch url.replace(/^.*\./, '').replace(/\?.*/, '')
         when ''
             'html'
         when 'htm'
@@ -106,7 +107,7 @@ setBackstage = ->
                 div.id = 'backstage-editor-' + index
                 div.className = 'backstage-editor'
                 document.getElementById('backstage-editors').appendChild div
-                file = tabs[index].children[0].innerHTML
+                file = tabs[index].children[0].dataset.src
                 type = typeOf file
                 @editors[index] = CodeMirror div,
                     overwrite(defaultCMOptions, { mode : if type is 'html' then 'xml' else type }) # assuming file is not html
@@ -176,6 +177,12 @@ ready = ->
 
 
 layout = (files) ->
+    htmlTabOf = (file, number) ->
+        '<li' + (if number == 0 then ' class="none"' else '') +
+        '><a id="backstage-tab-' + number + '" href="#" data-src="' + file + '">' +
+        (if file is'' then '&lt;main&gt;' else file.replace(/\?.*/, '')) +
+        '</a></li>\n'
+
     container = document.createElement 'div'
     container.id = 'backstage-back'
     container.innerHTML =
@@ -188,15 +195,10 @@ layout = (files) ->
 
     tabs = container.children[0]
     tabs.id = 'backstage-tabs'
-    tabs.innerHTML = '<li class="none"><a id="backstage-tab-0" href="#">' +
-        files[0] + '</a></li>\n'
-
-    for i in [1...files.length]
-        tabs.innerHTML += '<li><a id="backstage-tab-' + i + '" href="#">' +
-            files[i] + '</a></li>\n'
-
-    editor = container.children[1]
-    editor.innerHTML = '<div id="backstage-editor-0" class="backstage-editor"></div>'
+    htmlTabs = ''
+    for i in [0...files.length]
+        htmlTabs += htmlTabOf files[i], i
+    tabs.innerHTML = htmlTabs
 
     document.body.appendChild container
     document.body.appendChild document.createTextNode '\n'
