@@ -17,18 +17,14 @@ defaultCMOptions =
 typeOf = (url) ->
     return 'html' unless /\./.test url # no extensions
     switch url.replace(/^.*\./, '').replace(/\?.*/, '')
-        when ''
-            'html'
-        when 'htm'
-            'html'
-        when 'html'
-            'html'
         when 'js'
             'javascript'
         when 'css'
             'css'
         when 'coffee'
             'coffeescript'
+        else
+            'html'
 
 
 baseOf = (url) ->
@@ -69,19 +65,20 @@ loadCSS = (url, callback) ->
     css.rel = 'stylesheet'
     css.href = url + '?time=' + (new Date).valueOf()
     document.head.appendChild css
-    count = 20
+    count = 50
     interval = setInterval ->
+            console.log count
             if --count <= 0
                 clearInterval interval
                 callback()
                 return
             sheets = document.styleSheets
             for i in [0...sheets.length]
-                if sheets[i].href is url
+                if sheets[i].href is css.href
                     clearInterval interval
                     callback()
                     break
-        , 50
+        , 100
 
 
 loadScript = (url, callback) ->
@@ -130,7 +127,7 @@ loadCodeMirror = ->
         ready()
 
     dependencies.cmscript = false    
-    loadScript "#{site}/lib/codemirror.min.js", ->
+    loadScript "#{site}/lib/codemirror.js", ->
         dependencies.cmscript = true
         ready()
 

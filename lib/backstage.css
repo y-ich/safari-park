@@ -4,16 +4,16 @@
  * Copyright (C) 2012 ICHIKAWA, Yuji (New 3 Rs)
  */
 
-.clearfix:after {
+#backstage-back .clearfix:after {
   content: "";   
   display: block;   
   clear: both;   
 }
 
 body {
+  margin: 0; /* work around to prevent slip of backstage button */
   -webkit-transition-property: -webkit-transform;
   -webkit-transition-duration: 3s;
-  margin: 0; /* work around to prevent slip of backstage button */
 /*  -webkit-transform-style: preserve-3d; */
 /* This is a work around against flicker at switching GPU for rendering.
    As a result, flicker appears when executing this script, doesn't appear when pushing the button.

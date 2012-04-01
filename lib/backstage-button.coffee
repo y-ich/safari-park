@@ -3,7 +3,7 @@
 site = 'http://192.168.1.8/~yuji/safari-park/'
 
 sw = document.createElement 'div'
-sw.id = 'backstage'
+sw.id = 'backstage-button'
 sw.className = 'backstage-switch'
 sw.innerHTML = 'b'
 sw.style['position'] = 'absolute'
