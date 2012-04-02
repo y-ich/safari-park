@@ -12,7 +12,7 @@ dependencies = {}
 defaultCMOptions =
     lineNumbers : true
     lineWrapping : false
-    readOnly : false # 'nocursor'
+    readOnly : 'nocursor'
 
 typeOf = (url) ->
     return 'html' unless /\./.test url # no extensions
