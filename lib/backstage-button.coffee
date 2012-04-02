@@ -1,6 +1,6 @@
 # test.coffee
 
-site = 'http://192.168.1.8/~yuji/safari-park/'
+site = 'http://y-ich.github.com/safari-park'
 
 sw = document.createElement 'div'
 sw.id = 'backstage-button'
@@ -31,5 +31,5 @@ sw.addEventListener 'click', ->
     Backstage.toggle()
   else
     script = document.createElement 'script'
-    script.src = site + 'lib/backstage.js?time=' + (new Date).valueOf() # prevent to use a cache.
+    script.src = "#{site}/lib/backstage.js?time=" + (new Date).valueOf() # prevent to use a cache.
     document.body.appendChild script

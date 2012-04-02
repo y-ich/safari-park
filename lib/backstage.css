@@ -24,7 +24,7 @@ body {
   width: 100%;
   background-color: white;
   position: absolute;
-/* The followings are works arounc against transition licker.
+/* The followings are works around against transition licker.
    Each works well but all disable you to click tabs or focus text. */
 /*  -webkit-backface-visibility: hidden; */
 /*  -webkit-perspective: 1000; */

@@ -5,7 +5,7 @@
 ###
 
 
-site = 'http://192.168.1.8/~yuji/safari-park'
+site = 'http://y-ich.github.com/safari-park'
 
 dependencies = {}
 
@@ -67,7 +67,6 @@ loadCSS = (url, callback) ->
     document.head.appendChild css
     count = 50
     interval = setInterval ->
-            console.log count
             if --count <= 0
                 clearInterval interval
                 callback()
@@ -127,7 +126,7 @@ loadCodeMirror = ->
         ready()
 
     dependencies.cmscript = false    
-    loadScript "#{site}/lib/codemirror.js", ->
+    loadScript "#{site}/lib/codemirror.min.js", ->
         dependencies.cmscript = true
         ready()
 
